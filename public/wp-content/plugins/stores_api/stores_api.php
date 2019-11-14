@@ -43,7 +43,11 @@ class My_REST_Posts_Controller
      */
     public function get_items_permissions_check($request)
     {
-        return wp_verify_nonce($request->get_param('_wpnonce'), 'wp_rest');
+        if (!current_user_can('read')) {
+            return new WP_Error('rest_forbidden', esc_html__('You cannot view the post resource.'), array('status' => $this->authorization_status_code()));
+        }
+        return true;
+
     }
 
     /**
@@ -107,6 +111,14 @@ class My_REST_Posts_Controller
             $post_data['title'] = $post->post_title;
         }
 
+        if (isset($schema['properties']['longitude'])) {
+            $post_data['longitude'] = get_field('longitude', $post);
+        }
+
+        if (isset($schema['properties']['latitude'])) {
+            $post_data['latitude'] = get_field('latitude', $post);
+        }
+
         return rest_ensure_response($post_data);
     }
 
@@ -165,6 +177,14 @@ class My_REST_Posts_Controller
                     'description' => esc_html__('The title for the object.', 'my-textdomain'),
                     'type' => 'string',
                 ),
+                'latitude' => array(
+                    'description' => esc_html__('Cords'),
+                    'type' => 'string',
+                ),
+                'longitude' => array(
+                    'description' => esc_html__('Cords'),
+                    'type' => 'string',
+                ),
             ),
         );
 
@@ -198,7 +218,6 @@ function endpoint_js() {
     wp_enqueue_script('endpoints', plugins_url( '/stores_api.js', __FILE__ ));
     wp_localize_script('endpoints', 'store_plugin', [
         "wp_store_endpoint" => esc_url_raw(rest_url('/stores_api/v1/stores')),
-        "wp_rest_nonce" => wp_create_nonce('wp_rest')
     ]);
 };
 

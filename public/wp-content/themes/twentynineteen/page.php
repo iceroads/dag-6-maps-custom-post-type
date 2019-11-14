@@ -34,18 +34,5 @@ get_header();
 		</main><!-- #main -->
 	</section><!-- #primary -->
 
-<script>
-    jQuery(function($) {
-        $.get(
-            store_plugin.wp_store_endpoint,
-            {
-                '_wpnonce': store_plugin.wp_rest_nonce
-            },
-            function(response) {
-            console.log(response);
-        })
-    });
-</script>
-
 <?php
 get_footer();
