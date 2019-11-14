@@ -1,7 +1,11 @@
 #Instructions
 
-Använd temat twentynineteen
-ersätt page.php
+Glöm inte skriva över filer i standard temat twentynineteen
+med detta repo efter ni installerat wordpress
 
-För att kolla så det fungerar måste man besöka en sida.
-Ni kan testa genom klicka på "pages" och ta "view" på en av sidorna
+Glöm inte att ange API nyckel i functions.php
+på rad 224
+
+Skriv in denna rad i din wp-confg.php
+```define('JWT_AUTH_SECRET_KEY', 'your-top-secret-key');```
+
