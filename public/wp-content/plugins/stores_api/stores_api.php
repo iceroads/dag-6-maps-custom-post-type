@@ -205,6 +205,8 @@ class My_REST_Posts_Controller
     }
 }
 
+include dirname(__FILE__) . '/stores_custom_post_type.php';
+
 // Function to register our new routes from the controller.
 function prefix_register_my_rest_routes()
 {
