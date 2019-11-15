@@ -79,19 +79,6 @@ class My_REST_Posts_Controller
     }
 
     /**
-     * Check permissions for the posts.
-     *
-     * @param WP_REST_Request $request Current request.
-     */
-    public function get_item_permissions_check($request)
-    {
-        if (!current_user_can('read')) {
-            return new WP_Error('rest_forbidden', esc_html__('You cannot view the post resource.'), array('status' => $this->authorization_status_code()));
-        }
-        return true;
-    }
-
-    /**
      * Matches the post data to the schema we want.
      *
      * @param WP_Post $post The comment object whose response is being prepared.
