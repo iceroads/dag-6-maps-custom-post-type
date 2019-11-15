@@ -43,11 +43,18 @@ class My_REST_Posts_Controller
      */
     public function get_items_permissions_check($request)
     {
-        if (!current_user_can('read')) {
-            return new WP_Error('rest_forbidden', esc_html__('You cannot view the post resource.'), array('status' => $this->authorization_status_code()));
+        if ( isset( $_REQUEST['_wpnonce'] ) ) {
+            $nonce = $_REQUEST['_wpnonce'];
+        } elseif ( isset( $_SERVER['HTTP_X_WP_NONCE'] ) ) {
+            $nonce = $_SERVER['HTTP_X_WP_NONCE'];
         }
-        return true;
 
+        if ( null === $nonce ) {
+            // No nonce at all, so act as if it's an unauthenticated request.
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -207,6 +214,7 @@ function endpoint_js() {
     wp_enqueue_script('endpoints', plugins_url( '/stores_api.js', __FILE__ ));
     wp_localize_script('endpoints', 'store_plugin', [
         "wp_store_endpoint" => esc_url_raw(rest_url('/stores_api/v1/stores')),
+        "wp_rest_nonce" => wp_create_nonce('wp_rest')
     ]);
 };
 

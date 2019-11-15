@@ -53,15 +53,19 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     infoWindow.open(map);
 }
 
-
+/**
+ * Function that is loaded together with Google Maps Init function
+ * @param Google Maps Instantiation from line 9 - map
+ */
 function set_stores_markers_to_map(map) {
+    // Get endpoint and nonce from the wp_localize_script
+    // defined in stores_api plugin
     var endpoint = store_plugin.wp_store_endpoint;
+    var nonce = store_plugin.wp_rest_nonce;
 
     jQuery.ajax({
         url: endpoint,
         success: function(response) {
-            // Time variable. Makes so one store drop down at the time
-            var time = 0;
             // Foreach store we get from the endpoint
             response.forEach(function(store) {
                 // Save the cords to a object
@@ -69,18 +73,12 @@ function set_stores_markers_to_map(map) {
                     lat: parseFloat(store.latitude),
                     lng: parseFloat(store.longitude)
                 };
-                // Make a setTimeOut to make use of the time variable
-                setTimeout(function() {
-                    // Create a marker on the map
-                    new google.maps.Marker({
-                        position: cords,
-                        map: map,
-                        animation: google.maps.Animation.DROP,
-                    });
-                }, time);
-                // Add 400ms to the time to make the next marker
-                // wait 400ms before it executes create marker
-                time += 400;
+                // Create a marker on the map
+                new google.maps.Marker({
+                    position: cords,
+                    map: map,
+                    animation: google.maps.Animation.DROP,
+                });
             });
         },
         // Output error in console
@@ -89,7 +87,7 @@ function set_stores_markers_to_map(map) {
         },
         // Add JW-token in header before send
         beforeSend: function(xhr) {
-            xhr.setRequestHeader("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvc2VjdXJld3AudGVzdCIsImlhdCI6MTU3Mzc0MDYxNiwibmJmIjoxNTczNzQwNjE2LCJleHAiOjE1NzQzNDU0MTYsImRhdGEiOnsidXNlciI6eyJpZCI6IjEifX19.R1RnAPwANuThjLzNIQVv6xk6e1mtJvBxn1wsY5dB41g");
+            xhr.setRequestHeader('X-WP-Nonce', nonce);
         }
     });
 }
