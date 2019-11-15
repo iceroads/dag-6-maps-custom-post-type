@@ -66,20 +66,7 @@ function set_stores_markers_to_map(map) {
     jQuery.ajax({
         url: endpoint,
         success: function(response) {
-            // Foreach store we get from the endpoint
-            response.forEach(function(store) {
-                // Save the cords to a object
-                var cords = {
-                    lat: parseFloat(store.latitude),
-                    lng: parseFloat(store.longitude)
-                };
-                // Create a marker on the map
-                new google.maps.Marker({
-                    position: cords,
-                    map: map,
-                    animation: google.maps.Animation.DROP,
-                });
-            });
+            console.log(response)
         },
         // Output error in console
         error: function(error) {
